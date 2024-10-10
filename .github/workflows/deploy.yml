@@ -27,15 +27,15 @@ jobs:
           docker build -t hocvv111999/tele-miniapp:latest .
           docker push hocvv111999/tele-miniapp:latest
 
-  # deployment:
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   name: Deploy to EC2
-  #   steps:
-  #     - uses: actions/checkout@v3
+  deployment:
+    runs-on: ubuntu-latest
+    needs: build
+    name: Deploy to EC2
+    steps:
+      - uses: actions/checkout@v3
 
-  #     - name: Execute SSH commands on remote server
-  #       run: |
-  #         echo "${{ secrets.SSH_PRIVATE_KEY }}" > keypair.pem && chmod 600 keypair.pem
-  #         ssh -o StrictHostKeyChecking=no -i keypair.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
-  #         sh ~/accomy-fe/deploy-accomy-fe.sh'
+      - name: Execute SSH commands on remote server
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > keypair.pem && chmod 600 keypair.pem
+          ssh -o StrictHostKeyChecking=no -i keypair.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
+          sh ~/accomy-fe/deploy-accomy-fe.sh'
