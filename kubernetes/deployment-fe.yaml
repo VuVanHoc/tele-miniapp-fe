@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tele-miniapp-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tele-miniapp
+  template:
+    metadata:
+      labels:
+        app: tele-miniapp
+    spec:
+      containers:
+        - name: tele-miniapp
+          # Image name on DockerHub
+          image: hocvv111999/tele-miniapp:latest
+          # Always pull latest image
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4173
+      tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          effect: "NoSchedule"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tele-miniapp-service
+spec:
+  type: NodePort
+  selector:
+    app: tele-miniapp
+  ports:
+    - protocol: TCP
+      port: 4173
+      targetPort: 4173
+      # Port to allow access from TCP/IP -> http://<public-ip>:34173
+      nodePort: 34173
